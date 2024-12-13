@@ -36,6 +36,7 @@ CMD echo 'php_value[max_input_vars] = 10000' >> /usr/local/etc/php-fpm.d/www.con
 CMD echo 'php_value[always_populate_raw_post_data] = -1' >> /usr/local/etc/php-fpm.d/www.conf
 CMD echo 'php_value[date.timezone] = Asia/Jakarta' >> /usr/local/etc/php-fpm.d/www.conf
 CMD sed -i '' 's%Require ip 127.0.0.1 xx.xx.xx.xx%Require ip 127.0.0.1 ${JAIL_IP}%g' /usr/local/etc/apache24/Includes/zabbix.conf
+CMD cp /usr/local/etc/apache24/Includes/zabbix.conf.sample /usr/local/etc/apache24/Includes/zabbix.conf
 CMD chown -R www:www /usr/local/www/zabbix7
 SERVICE zabbix_server enable
 SERVICE zabbix_server start
