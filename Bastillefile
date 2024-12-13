@@ -1,3 +1,9 @@
+CONFIG set enforce_statfs=1;
+CONFIG set allow.mount.procfs;
+CONFIG set mount.procfs;
+
+RESTART
+
 # install required famp
 INCLUDE https://github.com/bastille-templates/apache
 INCLUDE https://github.com/bastille-templates/php
@@ -7,19 +13,33 @@ INCLUDE https://github.com/bastille-templates/phpmyadmin
 PKG zabbix7-server zabbix7-frontend-php82 zabbix7-agent php82-mbstring php82-gd php82-bcmath
 
 # copy files
-#CP usr /
+CP usr /
 
+CMD cp /usr/local/etc/apache24/Includes/phpmyadmin.conf.sample /usr/local/etc/apache24/Includes/phpmyadmin.conf
 CMD mysql -u root -e "CREATE DATABASE IF NOT EXISTS zabbix character set utf8mb4 collate utf8mb4_bin"
 CMD mysql -u root -e "CREATE USER IF NOT EXISTS zabbix@'localhost' identified by 'dbzabpass'"
 CMD mysql -u root -e "GRANT ALL PRIVILEGES on zabbix.* to zabbix@'localhost'"
 CMD mysql -u root -e "SET global log_bin_trust_function_creators = 1"
 CMD mysql -u root -e "FLUSH PRIVILEGES"
-#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < schema.sql
-#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < images.sql
-#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < data.sql
-#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u root -e "set global log_bin_trust_function_creators = 0"
-CMD sed -i '' 's%# DBPassword=%# DBPassword=dbzabpass%g' /usr/local/etc/zabbix7/zabbix_server.conf
-#CMD chown -R www:www /usr/local/www/zabbix7
-
+CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < schema.sql
+CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < images.sql
+CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < data.sql
+CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u root -e "set global log_bin_trust_function_creators = 0"
+CMD sed -i '' 's%# DBPassword=%DBPassword=dbzabpass%g' /usr/local/etc/zabbix7/zabbix_server.conf
+CMD sed -i '' 's%Hostname=Zabbix server%Hostname=Zabbix_Server%g' /usr/local/etc/zabbix7/zabbix_agentd.conf
+CMD echo 'php_value[max_execution_time] = 300' >> /usr/local/etc/php-fpm.d/www.conf
+CMD echo 'php_value[memory_limit] = 128M' >> /usr/local/etc/php-fpm.d/www.conf
+CMD echo 'php_value[post_max_size] = 16M' >> /usr/local/etc/php-fpm.d/www.conf
+CMD echo 'php_value[upload_max_filesize] = 2M' >> /usr/local/etc/php-fpm.d/www.conf
+CMD echo 'php_value[max_input_time] = 300' >> /usr/local/etc/php-fpm.d/www.conf
+CMD echo 'php_value[max_input_vars] = 10000' >> /usr/local/etc/php-fpm.d/www.conf
+CMD echo 'php_value[always_populate_raw_post_data] = -1' >> /usr/local/etc/php-fpm.d/www.conf
+CMD echo 'php_value[date.timezone] = Asia/Jakarta' >> /usr/local/etc/php-fpm.d/www.conf
+CMD sed -i '' 's%Require ip 127.0.0.1 xx.xx.xx.xx%Require ip 127.0.0.1 ${JAIL_IP}%g' /usr/local/etc/apache24/Includes/zabbix.conf
+CMD chown -R www:www /usr/local/www/zabbix7
+SERVICE zabbix_server enable
+SERVICE zabbix_server start
+SERVICE zabbix_agentd enable
+SERVICE zabbix_agentd start
 SERVICE php_fpm restart
 SERVICE apache24 restart

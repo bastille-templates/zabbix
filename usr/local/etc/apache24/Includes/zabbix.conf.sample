@@ -1,0 +1,30 @@
+<IfModule mod_alias.c>
+    Alias /zabbix /usr/local/www/zabbix7
+</IfModule>
+
+<Directory "/usr/local/www/zabbix7">
+    DirectoryIndex index.php zabbix.php
+    Options FollowSymLinks
+    AllowOverride Limit
+    Require all granted
+</Directory>
+
+<Directory "/usr/local/www/zabbix7/conf">
+    Require all denied
+</Directory>
+
+<Directory "/usr/local/www/zabbix7/app">
+    Require all denied
+</Directory>
+
+<Directory "/usr/local/www/zabbix7/include">
+    Require all denied
+</Directory>
+
+<Directory "/usr/local/www/zabbix7/local">
+    Require all denied
+</Directory>
+
+<Directory "/usr/local/www/zabbix7/vendor">
+    Require all denied
+</Directory>
