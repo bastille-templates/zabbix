@@ -1,0 +1,24 @@
+# install required famp
+INCLUDE https://github.com/bastille-templates/apache
+INCLUDE https://github.com/bastille-templates/php
+INCLUDE https://github.com/bastille-templates/mysql
+INCLUDE https://github.com/bastille-templates/phpmyadmin
+
+PKG zabbix7-server zabbix7-frontend-php82 zabbix7-agent php82-mbstring php82-gd php82-bcmath
+
+# copy files
+#CP usr /
+
+CMD mysql -u root -e "CREATE DATABASE IF NOT EXISTS zabbix character set utf8mb4 collate utf8mb4_bin"
+CMD mysql -u root -e "CREATE USER IF NOT EXISTS zabbix@'localhost' identified by 'dbzabpass'"
+CMD mysql -u root -e "GRANT ALL PRIVILEGES on zabbix.* to zabbix@'localhost'"
+CMD mysql -u root -e "SET global log_bin_trust_function_creators = 1"
+CMD mysql -u root -e "FLUSH PRIVILEGES"
+#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < schema.sql
+#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < images.sql
+#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < data.sql
+#CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u root -e "set global log_bin_trust_function_creators = 0"
+#CMD chown -R www:www /usr/local/www/zabbix7
+
+SERVICE php_fpm restart
+SERVICE apache24 restart
