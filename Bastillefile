@@ -36,9 +36,13 @@ CMD echo 'php_value[date.timezone] = Asia/Jakarta' >> /usr/local/etc/php-fpm.d/w
 CMD sed -i '' 's%Require ip 127.0.0.1 xx.xx.xx.xx%Require ip 127.0.0.1 ${JAIL_IP}%g' /usr/local/etc/apache24/Includes/zabbix.conf
 CMD cp /usr/local/etc/apache24/Includes/zabbix.conf.sample /usr/local/etc/apache24/Includes/zabbix.conf
 CMD chown -R www:www /usr/local/www/zabbix7
+
 SERVICE zabbix_server enable
 SERVICE zabbix_server start
 SERVICE zabbix_agentd enable
 SERVICE zabbix_agentd start
 SERVICE php_fpm restart
 SERVICE apache24 restart
+
+RDR tcp 80 80
+RDR tcp 443 443
