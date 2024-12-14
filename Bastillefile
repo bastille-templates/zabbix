@@ -8,7 +8,7 @@ INCLUDE https://github.com/bastille-templates/php
 INCLUDE https://github.com/bastille-templates/mysql
 INCLUDE https://github.com/bastille-templates/phpmyadmin
 
-PKG zabbix7-server zabbix7-frontend-php82 zabbix7-agent php82-mbstring php82-gd php82-bcmath
+PKG zabbix7-server zabbix7-frontend-php82 php82-mbstring php82-gd php82-bcmath
 
 # copy files
 CP usr /
@@ -24,7 +24,6 @@ CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbza
 CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'dbzabpass' zabbix < data.sql
 CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u root -e "set global log_bin_trust_function_creators = 0"
 CMD sed -i '' 's%# DBPassword=%DBPassword=dbzabpass%g' /usr/local/etc/zabbix7/zabbix_server.conf
-CMD sed -i '' 's%Hostname=Zabbix server%Hostname=Zabbix_Server%g' /usr/local/etc/zabbix7/zabbix_agentd.conf
 CMD echo 'php_value[max_execution_time] = 300' >> /usr/local/etc/php-fpm.d/www.conf
 CMD echo 'php_value[memory_limit] = 128M' >> /usr/local/etc/php-fpm.d/www.conf
 CMD echo 'php_value[post_max_size] = 16M' >> /usr/local/etc/php-fpm.d/www.conf
@@ -39,8 +38,6 @@ CMD chown -R www:www /usr/local/www/zabbix7
 
 SERVICE zabbix_server enable
 SERVICE zabbix_server start
-SERVICE zabbix_agentd enable
-SERVICE zabbix_agentd start
 SERVICE php_fpm restart
 SERVICE apache24 restart
 
