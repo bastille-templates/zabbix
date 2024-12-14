@@ -1,4 +1,5 @@
 CONFIG set allow.sysvipc=1;
+CONFIG set allow.raw_sockets =1;
 
 RESTART
 
@@ -43,3 +44,4 @@ SERVICE apache24 restart
 
 RDR tcp 80 80
 RDR tcp 443 443
+RDR tcp 10050
