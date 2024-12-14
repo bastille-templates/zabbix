@@ -1,6 +1,6 @@
 ## Now apply template to container
 ```sh
-bastille create zabbix 14.1-RELEASE 10.0.0.10
+bastille create zabbix 14.1-RELEASE YourIP-Bastille
 
 bastille bootstrap https://github.com/bastille-templates/zabbix
 bastille template zabbix bastille-templates/zabbix
