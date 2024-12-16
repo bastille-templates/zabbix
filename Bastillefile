@@ -44,4 +44,4 @@ SERVICE apache24 restart
 
 RDR tcp 80 80
 RDR tcp 443 443
-RDR tcp 10050
+RDR tcp 10050 10050 
