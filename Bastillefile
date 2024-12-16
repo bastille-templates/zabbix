@@ -7,7 +7,7 @@ RESTART
 INCLUDE https://github.com/bastille-templates/apache
 INCLUDE https://github.com/bastille-templates/php
 INCLUDE https://github.com/bastille-templates/mysql
-INCLUDE https://github.com/bastille-templates/phpmyadmin
+INCLUDE https://github.com/bastille-templates/famp-mysql
 
 PKG zabbix7-server zabbix7-frontend-php82 php82-mbstring php82-gd php82-bcmath
 
