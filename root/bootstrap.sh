@@ -1,5 +1,5 @@
 pkg install -y expect
-DB_ROOT_PASSWORD=$(openssl rand -base64 8) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD > /root/db_root_pwd.txt
+DB_ROOT_PASSWORD=$(openssl rand -base64 32) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD > /root/db_root_pwd.txt
 
 SECURE_MYSQL=$(expect -c "
 set timeout 10
@@ -8,7 +8,7 @@ spawn mysql_secure_installation
 expect \"Press y|Y for Yes, any other key for No:\"
 send \"y\r\"
 expect \"Please enter 0 = LOW, 1 = MEDIUM and 2 = STRONG:\"
-send \"0\r\"
+send \"2\r\"
 expect \"New password:\"
 send \"$DB_ROOT_PASSWORD\r\"
 expect \"Re-enter new password:\"
