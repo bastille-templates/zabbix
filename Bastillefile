@@ -37,7 +37,7 @@ CMD cp /usr/local/etc/apache24/Includes/zabbix.conf.sample /usr/local/etc/apache
 CMD chown -R www:www /usr/local/www/zabbix7
 CMD cd /root && sh bootstrap.sh
 CMD rm /root/bootstrap.sh
-CMD echo "Your DB_ROOT_PASSWORD is written on this file /root/db_root_pwd.txt" && chmod 400 /root/db_zabbix_pwd.txt
+CMD echo "Your DB_ROOT_PASSWORD is written on this file /root/db_zabbix_pwd.txt" && chmod 400 /root/db_zabbix_pwd.txt
 
 SERVICE zabbix_server enable
 SERVICE zabbix_server start
