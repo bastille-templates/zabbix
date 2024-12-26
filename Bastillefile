@@ -23,7 +23,7 @@ CMD echo 'php_value[date.timezone] = Asia/Jakarta' >> /usr/local/etc/php-fpm.d/w
 CMD sed -i '' 's%Require ip 127.0.0.1 xx.xx.xx.xx%Require ip 127.0.0.1 ${JAIL_IP}%g' /usr/local/etc/apache24/Includes/zabbix.conf
 CMD cp /usr/local/etc/apache24/Includes/zabbix.conf.sample /usr/local/etc/apache24/Includes/zabbix.conf
 CMD sed -i '' 's%# DBPassword=%DBPassword=$DBZABBIX_PASSWD%g' /usr/local/etc/zabbix7/zabbix_server.conf
-CMD sed -i '' 's%# Server=127.0.0.1%Server=${JAIL_IP}%g' /usr/local/etc/zabbix7/zabbix_agentd.conf
+CMD sed -i '' 's%Server=127.0.0.1%Server=${JAIL_IP}%g' /usr/local/etc/zabbix7/zabbix_agentd.conf
 CMD chown -R www:www /usr/local/www/zabbix7
 CMD cd /root && sh bootstrap.sh
 CMD rm /root/bootstrap.sh
