@@ -12,18 +12,6 @@ PKG zabbix7-server zabbix7-agent zabbix7-frontend-php82 php82-mbstring php82-gd 
 CP root /
 CP usr /
 
-CMD DBZABBIX_PASSWD=$(openssl rand -base64 16) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD > /root/db_zabbix_pwd.txt
-CMD cp /usr/local/etc/apache24/Includes/phpmyadmin.conf.sample /usr/local/etc/apache24/Includes/phpmyadmin.conf
-CMD mysql -u root -e "CREATE DATABASE IF NOT EXISTS zabbix character set utf8mb4 collate utf8mb4_bin"
-CMD mysql -u root -e "CREATE USER IF NOT EXISTS zabbix@'localhost' identified by '$DBZABBIX_PASSWD'"
-CMD mysql -u root -e "GRANT ALL PRIVILEGES on zabbix.* to zabbix@'localhost'"
-CMD mysql -u root -e "SET global log_bin_trust_function_creators = 1"
-CMD mysql -u root -e "FLUSH PRIVILEGES"
-CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'$DBZABBIX_PASSWD' zabbix < schema.sql
-CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'$DBZABBIX_PASSWD' zabbix < images.sql
-CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'$DBZABBIX_PASSWD' zabbix < data.sql
-CMD cd /usr/local/share/zabbix7/server/database/mysql && mysql -u root -e "set global log_bin_trust_function_creators = 0"
-CMD sed -i '' 's%# DBPassword=%DBPassword=$DBZABBIX_PASSWD%g' /usr/local/etc/zabbix7/zabbix_server.conf
 CMD echo 'php_value[max_execution_time] = 300' >> /usr/local/etc/php-fpm.d/www.conf
 CMD echo 'php_value[memory_limit] = 128M' >> /usr/local/etc/php-fpm.d/www.conf
 CMD echo 'php_value[post_max_size] = 16M' >> /usr/local/etc/php-fpm.d/www.conf
@@ -37,7 +25,6 @@ CMD cp /usr/local/etc/apache24/Includes/zabbix.conf.sample /usr/local/etc/apache
 CMD chown -R www:www /usr/local/www/zabbix7
 CMD cd /root && sh bootstrap.sh
 CMD rm /root/bootstrap.sh
-CMD echo "Your DB_ROOT_PASSWORD is written on this file /root/db_zabbix_pwd.txt" && chmod 400 /root/db_zabbix_pwd.txt
 
 SERVICE zabbix_server enable
 SERVICE zabbix_server start

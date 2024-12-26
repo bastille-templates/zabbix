@@ -1,4 +1,22 @@
 pkg install -y expect
+# Generate Passowrd Zabbix DB
+DBZABBIX_PASSWD=$(openssl rand -base64 16) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD > /root/db_zabbix_pwd.txt
+
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS zabbix character set utf8mb4 collate utf8mb4_bin"
+mysql -u root -e "CREATE USER IF NOT EXISTS zabbix@'localhost' identified by '$DBZABBIX_PASSWD'"
+mysql -u root -e "GRANT ALL PRIVILEGES on zabbix.* to zabbix@'localhost'"
+mysql -u root -e "SET global log_bin_trust_function_creators = 1"
+mysql -u root -e "FLUSH PRIVILEGES"
+cp /usr/local/etc/apache24/Includes/phpmyadmin.conf.sample /usr/local/etc/apache24/Includes/phpmyadmin.conf
+cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'$DBZABBIX_PASSWD' zabbix < schema.sql
+cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'$DBZABBIX_PASSWD' zabbix < images.sql
+cd /usr/local/share/zabbix7/server/database/mysql && mysql -u zabbix -p'$DBZABBIX_PASSWD' zabbix < data.sql
+cd /usr/local/share/zabbix7/server/database/mysql && mysql -u root -e "set global log_bin_trust_function_creators = 0"
+sed -i '' 's%# DBPassword=%DBPassword=$DBZABBIX_PASSWD%g' /usr/local/etc/zabbix7/zabbix_server.conf
+echo "Your DB_ZABBIX_PASSWD is written on this file /root/db_zabbix_pwd.txt"
+chmod 400 /root/db_zabbix_pwd.txt
+
+# Generate Passowrd Root DB
 DB_ROOT_PASSWORD=$(openssl rand -base64 32) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD > /root/db_root_pwd.txt
 
 SECURE_MYSQL=$(expect -c "
