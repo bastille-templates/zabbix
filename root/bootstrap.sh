@@ -1,6 +1,6 @@
 pkg install -y expect
 # Generate Passowrd Zabbix DB
-DBZABBIX_PASSWD=$(openssl rand -base64 16) && export DB_ROOT_PASSWORD && echo $DB_ROOT_PASSWORD > /root/db_zabbix_pwd.txt
+DBZABBIX_PASSWD=$(openssl rand -base64 16) && export DBZABBIX_PASSWD && echo $DBZABBIX_PASSWD > /root/db_zabbix_pwd.txt
 
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS zabbix character set utf8mb4 collate utf8mb4_bin"
 mysql -u root -e "CREATE USER IF NOT EXISTS zabbix@'localhost' identified by '$DBZABBIX_PASSWD'"
