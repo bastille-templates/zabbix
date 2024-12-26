@@ -7,7 +7,6 @@ mysql -u root -e "CREATE USER IF NOT EXISTS zabbix@'localhost' identified by '$D
 mysql -u root -e "GRANT ALL PRIVILEGES on zabbix.* to zabbix@'localhost'"
 mysql -u root -e "SET global log_bin_trust_function_creators = 1"
 mysql -u root -e "FLUSH PRIVILEGES"
-cp /usr/local/etc/apache24/Includes/phpmyadmin.conf.sample /usr/local/etc/apache24/Includes/phpmyadmin.conf
 cd /usr/local/share/zabbix7/server/database/mysql && mysql zabbix < schema.sql
 cd /usr/local/share/zabbix7/server/database/mysql && mysql zabbix < images.sql
 cd /usr/local/share/zabbix7/server/database/mysql && mysql zabbix < data.sql
